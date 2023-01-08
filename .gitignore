@@ -36,3 +36,6 @@
 .vs/
 .vs
 
+build/.intermediates
+plugins/CarTracker.exp
+plugins/CarTracker.pdb
