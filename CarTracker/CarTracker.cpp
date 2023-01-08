@@ -81,8 +81,17 @@ void CarTracker::onLoad()
 	gameWrapper->RegisterDrawable([this](CanvasWrapper canvas) {
 		Render(canvas);
 	});
-	myImage = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "MyPluginFolder" / "Peter_Griffin.png", true, true);
-	myImage->LoadForCanvas();
+
+	// register points
+	points.push_back("p1");
+	points.push_back("p2");
+	points.push_back("p3");
+
+	for (auto& point : points) {
+		cvarManager->registerCvar("ct_coord_" + point + "_x", "0.0", "value of ct_coord_" + point + "_x");
+		cvarManager->registerCvar("ct_coord_" + point + "_y", "0.0", "value of ct_coord_" + point + "_y");
+	}
+	
 }
 
 
@@ -188,9 +197,77 @@ void CarTracker::RenderSettings() {
 	ImGui::SliderFloat("X", &cursor.x, 0.0, 1080.0);
 	ImGui::SliderFloat("Y", &cursor.y, 0.0, 1080.0);
 	
-
 	// spawn circle
 	CarTracker::drawBall();
+
+	ImGui::TextUnformatted("A really cool plugin");
+
+	// sliders for the points
+	CVarWrapper p1_cvar_y = cvarManager->getCvar("ct_coord_p1_y");
+	if (!p1_cvar_y) { return; }
+	float p1_y = p1_cvar_y.getFloatValue();
+	if (ImGui::SliderFloat("p1_y:", &p1_y, 0.0, 1080.0)) {
+		p1_cvar_y.setValue(p1_y);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "p1_y is " + std::to_string(y);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
+
+	CVarWrapper p1_cvar_x = cvarManager->getCvar("ct_coord_p1_x");
+	if (!p1_cvar_x) { return; }
+	float p1_x = p1_cvar_x.getFloatValue();
+	if (ImGui::SliderFloat("p1_x:", &p1_x, 0.0, 1920.0)) {
+		p1_cvar_x.setValue(p1_x);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "p1_x is " + std::to_string(x);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
+
+	CVarWrapper p2_cvar_y = cvarManager->getCvar("ct_coord_p2_y");
+	if (!p2_cvar_y) { return; }
+	float p2_y = p2_cvar_y.getFloatValue();
+	if (ImGui::SliderFloat("p2_y:", &p2_y, 0.0, 1080.0)) {
+		p2_cvar_y.setValue(p2_y);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "p2_y is " + std::to_string(y);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
+
+	CVarWrapper p2_cvar_x = cvarManager->getCvar("ct_coord_p2_x");
+	if (!p2_cvar_x) { return; }
+	float p2_x = p2_cvar_x.getFloatValue();
+	if (ImGui::SliderFloat("p2_x:", &p2_x, 0.0, 1920.0)) {
+		p2_cvar_x.setValue(p2_x);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "p2_x is " + std::to_string(x);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
+
+	CVarWrapper p3_cvar_y = cvarManager->getCvar("ct_coord_p3_y");
+	if (!p3_cvar_y) { return; }
+	float p3_y = p3_cvar_y.getFloatValue();
+	if (ImGui::SliderFloat("p3_y:", &p3_y, 0.0, 1080.0)) {
+		p3_cvar_y.setValue(p3_y);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "p3_y is " + std::to_string(y);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
+
+	CVarWrapper p3_cvar_x = cvarManager->getCvar("ct_coord_p3_x");
+	if (!p3_cvar_x) { return; }
+	float p3_x = p3_cvar_x.getFloatValue();
+	if (ImGui::SliderFloat("p3_x:", &p3_x, 0.0, 1920.0)) {
+		p3_cvar_x.setValue(p3_x);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "p3_x is " + std::to_string(x);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
 }
 
 void CarTracker::drawBall()
@@ -249,7 +326,29 @@ void CarTracker::Render(CanvasWrapper canvas)
 	// the two floats are text x and y scale
 	// the false turns off the drop shadow
 	canvas.DrawString("Hi Cool Dude", 2.0, 2.0, false);
-	Vector2F p1 = Vector2F(100.0, 200.0);
-	Vector2F p2 = Vector2F(300.0, 300.0);
+	Vector2F p1 = Vector2F(100, 200);
+	Vector2F p2 = Vector2F(200, 300);
+	Vector2F p3 = Vector2F(200, 200);
 	
+	for (auto& point : points) {
+		CVarWrapper cvar_x = cvarManager->getCvar("ct_coord_" + point + "_x");
+		if (!cvar_x) { return; }
+		float x = cvar_x.getFloatValue();
+
+		CVarWrapper cvar_y = cvarManager->getCvar("ct_coord_" + point + "_y");
+		if (!cvar_y) { return; }
+		float y = cvar_y.getFloatValue();
+
+		if (point == "p1") {
+			p1 = Vector2F(x, y);
+		}
+		else if (point == "p2") {
+			p2 = Vector2F(x, y);
+		}
+		else if (point == "p3") {
+			p3 = Vector2F(x, y);
+		}
+
+	}
+	canvas.FillTriangle(p1, p2, p3);
 }

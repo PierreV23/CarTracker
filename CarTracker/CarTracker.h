@@ -6,6 +6,7 @@
 #include "version.h"
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
+using namespace std;
 
 class CarTracker: public BakkesMod::Plugin::BakkesModPlugin
 	,public SettingsWindowBase // Uncomment if you wanna render your own tab in the settings menu
@@ -25,6 +26,7 @@ class CarTracker: public BakkesMod::Plugin::BakkesModPlugin
 	bool insideRocketLeagueWindow(ImVec2 pos);
 	void Render(CanvasWrapper canvas);
 	std::shared_ptr<ImageWrapper> myImage;
+	vector<string> points;
 
 public:
 	void RenderSettings() override; // Uncomment if you wanna render your own tab in the settings menu
