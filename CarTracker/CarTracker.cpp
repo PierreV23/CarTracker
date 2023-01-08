@@ -82,13 +82,6 @@ void CarTracker::ballOnTop() {
 	ball.SetLocation(carLocation + Vector{ 0, 0, distance });
 }
 
-//void CarTracker::SetImGuiContext(uintptr_t ctx) {
-//	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
-//}
-
-std::string CarTracker::GetPluginName() {
-	return "Car Tracker";
-}
 
 void CarTracker::RenderSettings() {
 	ImGui::TextUnformatted("A really cool plugin");
