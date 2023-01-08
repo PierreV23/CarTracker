@@ -81,3 +81,48 @@ void CarTracker::ballOnTop() {
 
 	ball.SetLocation(carLocation + Vector{ 0, 0, distance });
 }
+
+//void CarTracker::SetImGuiContext(uintptr_t ctx) {
+//	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
+//}
+
+//std::string CarTracker::GetPluginName() {
+//	return "Car Tracker";
+//}
+
+void CarTracker::RenderSettings() {
+	ImGui::TextUnformatted("A really cool plugin");
+
+	// spawn ball on top
+	if (ImGui::Button("Ball On Top")) {
+		gameWrapper->Execute([this](GameWrapper* gw) {
+			cvarManager->executeCommand("CoolerBallOnTop");
+			});
+	}
+	if (ImGui::IsItemHovered()) {
+		ImGui::SetTooltip("Activate Ball On Top");
+	}
+
+	// toggle
+	CVarWrapper enableCvar = cvarManager->getCvar("cool_enabled");
+	if (!enableCvar) { return; }
+	bool enabled = enableCvar.getBoolValue();
+	if (ImGui::Checkbox("Enable plugin", &enabled)) {
+		enableCvar.setValue(enabled);
+	}
+	if (ImGui::IsItemHovered()) {
+		ImGui::SetTooltip("Toggle Cool Plugin");
+	}
+
+	// distance
+	CVarWrapper distanceCvar = cvarManager->getCvar("cool_distance");
+	if (!distanceCvar) { return; }
+	float distance = distanceCvar.getFloatValue();
+	if (ImGui::SliderFloat("Distance", &distance, 0.0, 500.0)) {
+		distanceCvar.setValue(distance);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "distance is " + std::to_string(distance);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
+}
