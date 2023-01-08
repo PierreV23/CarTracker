@@ -86,9 +86,9 @@ void CarTracker::ballOnTop() {
 //	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
 //}
 
-//std::string CarTracker::GetPluginName() {
-//	return "Car Tracker";
-//}
+std::string CarTracker::GetPluginName() {
+	return "Car Tracker";
+}
 
 void CarTracker::RenderSettings() {
 	ImGui::TextUnformatted("A really cool plugin");
