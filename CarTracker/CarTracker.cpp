@@ -251,26 +251,5 @@ void CarTracker::Render(CanvasWrapper canvas)
 	canvas.DrawString("Hi Cool Dude", 2.0, 2.0, false);
 	Vector2F p1 = Vector2F(100.0, 200.0);
 	Vector2F p2 = Vector2F(300.0, 300.0);
-	//canvas.DrawRect(p1, p2);
-	//canvas.DrawTile();
-	// ImageWrapper(std::string path, bool canvasLoad = false, bool ImGuiLoad = false);
-	//if (myImage->IsLoadedForCanvas()) {
-	//	//canvas.DrawTexture(myImage.get(), 1);
-	//	// there are multiple functions in the canvaswrapper that accept ImageWrapper*
-
-	//	CVarWrapper cvar_x = cvarManager->getCvar("ct_coord_x");
-	//	if (!cvar_x) { return; }
-	//	float x = cvar_x.getFloatValue();
-
-	//	CVarWrapper cvar_y = cvarManager->getCvar("ct_coord_y");
-	//	if (!cvar_y) { return; }
-	//	float y = cvar_y.getFloatValue();
-
-	//	Rotator rot = Rotator();
-	//	float width = 247;
-	//	float height = 359;
-	//	
-	//	canvas.DrawRotatedTile(myImage.get(), rot, width, height, x, y, width, height, 0, 0);
-	//	
-	//}
+	
 }
