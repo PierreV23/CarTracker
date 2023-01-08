@@ -56,6 +56,14 @@ void CarTracker::onLoad()
 		.addOnValueChanged([this](std::string oldValue, CVarWrapper cvar) {
 		coolEnabled = cvar.getBoolValue();
 			});
+
+	// circle
+	cvarManager->registerNotifier("DrawBall", [this](std::vector<std::string> args) {
+		drawBall();
+	}, "", PERMISSION_ALL);
+
+	cvarManager->registerCvar("ct_coord_x", "577.0", "ct_coord_x");
+	cvarManager->registerCvar("ct_coord_y", "363.0", "ct_coord_y");
 }
 
 
@@ -118,4 +126,90 @@ void CarTracker::RenderSettings() {
 		std::string hoverText = "distance is " + std::to_string(distance);
 		ImGui::SetTooltip(hoverText.c_str());
 	}
+
+	// respawn circle
+	if (ImGui::Button("Circle")) {
+		gameWrapper->Execute([this](GameWrapper* gw) {
+			cvarManager->executeCommand("DrawBall");
+		});
+	}
+	if (ImGui::IsItemHovered()) {
+		ImGui::SetTooltip("Respawn circle");
+	}
+
+
+	// x slider
+	CVarWrapper cvar_x = cvarManager->getCvar("ct_coord_x");
+	if (!cvar_x) { return; }
+	float x = cvar_x.getFloatValue();
+	if (ImGui::SliderFloat("x:", &x, 0.0, 1920.0)) {
+		cvar_x.setValue(x);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "x is " + std::to_string(x);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
+
+	// y slider
+	CVarWrapper cvar_y = cvarManager->getCvar("ct_coord_y");
+	if (!cvar_y) { return; }
+	float y = cvar_y.getFloatValue();
+	if (ImGui::SliderFloat("y:", &y, 0.0, 1080.0)) {
+		cvar_y.setValue(y);
+	}
+	if (ImGui::IsItemHovered()) {
+		std::string hoverText = "x is " + std::to_string(x);
+		ImGui::SetTooltip(hoverText.c_str());
+	}
+
+	//ImVec2 cursor = ImGui::GetCursorPos();
+	//ImGuiMouseCursor cursor = ImGui::GetMouseCursor();
+	ImVec2 cursor = ImGui::GetMousePos();
+	//ImGui::TextUnformatted(std::to_string(cursor.x) + ';' + std::to_string(cursor.y));
+	ImGui::SliderFloat("X", &cursor.x, 0.0, 1080.0);
+	ImGui::SliderFloat("Y", &cursor.y, 0.0, 1080.0);
+
+	// spawn circle on cursor
+	if (CarTracker::insideRocketLeagueWindow(cursor)) {
+		CarTracker::drawBallToPos(cursor);
+	}
+	
+
+	// spawn circle
+	CarTracker::drawBall();
+}
+
+void CarTracker::drawBall()
+{
+	CVarWrapper cvar_x = cvarManager->getCvar("ct_coord_x");
+	if (!cvar_x) { return; }
+	float x = cvar_x.getFloatValue();
+
+	CVarWrapper cvar_y = cvarManager->getCvar("ct_coord_y");
+	if (!cvar_y) { return; }
+	float y = cvar_y.getFloatValue();
+
+
+	ImDrawList* draw_list = ImGui::GetOverlayDrawList();
+	//ImVec2 cursor = ImGui::GetCursorScreenPos();
+	//LOG(std::to_string(cursor.x) + ';' + std::to_string(cursor.y));
+	drawBallToPos(ImVec2(x, y));
+}
+
+void CarTracker::drawBallToPos(ImVec2 pos)
+{
+	ImDrawList* draw_list = ImGui::GetOverlayDrawList();
+	static ImVec4 colf = ImVec4(1.0f, 1.0f, 0.4f, 1.0f);
+	const ImU32 col = ImColor(colf);
+	draw_list->AddCircleFilled(pos, 10.0f, col);
+}
+
+bool CarTracker::insideRocketLeagueWindow(ImVec2 pos)
+{
+	float x = pos.x;
+	float y = pos.y;
+	if (x < 0 || x > 1920 || y < 0 || y > 1080) {
+		return false;
+	}
+	return true;
 }

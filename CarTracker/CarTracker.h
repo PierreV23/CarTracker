@@ -20,6 +20,9 @@ class CarTracker: public BakkesMod::Plugin::BakkesModPlugin
 	void ballOnTop();
 	//void RenderSettings() override;
 	//void SetImGuiContext(uintptr_t ctx) override;
+	void drawBall();
+	void drawBallToPos(ImVec2 pos);
+	bool insideRocketLeagueWindow(ImVec2 pos);
 
 public:
 	void RenderSettings() override; // Uncomment if you wanna render your own tab in the settings menu
