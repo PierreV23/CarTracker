@@ -64,6 +64,17 @@ void CarTracker::onLoad()
 
 	cvarManager->registerCvar("ct_coord_x", "577.0", "ct_coord_x");
 	cvarManager->registerCvar("ct_coord_y", "363.0", "ct_coord_y");
+	gameWrapper->HookEvent("Function Engine.Interaction.Tick",
+		[this](std::string eventName) {
+			// spawn circle on cursor
+			ImVec2 cursor = ImGui::GetMousePos();
+			if (CarTracker::insideRocketLeagueWindow(cursor)) {
+				//LOG("TEST");
+				CarTracker::drawBallToPos(cursor);
+			}
+			CarTracker::drawBall();
+		}
+	);
 }
 
 
@@ -168,11 +179,6 @@ void CarTracker::RenderSettings() {
 	//ImGui::TextUnformatted(std::to_string(cursor.x) + ';' + std::to_string(cursor.y));
 	ImGui::SliderFloat("X", &cursor.x, 0.0, 1080.0);
 	ImGui::SliderFloat("Y", &cursor.y, 0.0, 1080.0);
-
-	// spawn circle on cursor
-	if (CarTracker::insideRocketLeagueWindow(cursor)) {
-		CarTracker::drawBallToPos(cursor);
-	}
 	
 
 	// spawn circle
@@ -190,10 +196,10 @@ void CarTracker::drawBall()
 	float y = cvar_y.getFloatValue();
 
 
-	ImDrawList* draw_list = ImGui::GetOverlayDrawList();
+	//ImDrawList* draw_list = ImGui::GetOverlayDrawList();
 	//ImVec2 cursor = ImGui::GetCursorScreenPos();
 	//LOG(std::to_string(cursor.x) + ';' + std::to_string(cursor.y));
-	drawBallToPos(ImVec2(x, y));
+	CarTracker::drawBallToPos(ImVec2(x, y));
 }
 
 void CarTracker::drawBallToPos(ImVec2 pos)
