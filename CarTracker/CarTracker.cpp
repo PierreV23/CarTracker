@@ -64,17 +64,25 @@ void CarTracker::onLoad()
 
 	cvarManager->registerCvar("ct_coord_x", "577.0", "ct_coord_x");
 	cvarManager->registerCvar("ct_coord_y", "363.0", "ct_coord_y");
-	gameWrapper->HookEvent("Function Engine.Interaction.Tick",
-		[this](std::string eventName) {
-			// spawn circle on cursor
-			ImVec2 cursor = ImGui::GetMousePos();
-			if (CarTracker::insideRocketLeagueWindow(cursor)) {
-				//LOG("TEST");
-				CarTracker::drawBallToPos(cursor);
-			}
-			CarTracker::drawBall();
-		}
-	);
+	////gameWrapper->HookEvent("Function Engine.Interaction.Tick",
+	//gameWrapper->HookEvent("Function TAGame.PlayerInput_TA.GetKeyForAction",
+	//	[this](std::string eventName) {
+	//		// spawn circle on cursor
+	//		ImVec2 cursor = ImGui::GetMousePos();
+	//		if (CarTracker::insideRocketLeagueWindow(cursor)) {
+	//			CanvasWrapper
+	//			//LOG("TEST");
+	//			CarTracker::drawBallToPos(cursor);
+	//		}
+	//		CarTracker::drawBall();
+	//	}
+	//);
+	CarTracker::drawBall();
+	gameWrapper->RegisterDrawable([this](CanvasWrapper canvas) {
+		Render(canvas);
+	});
+	myImage = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "MyPluginFolder" / "Peter_Griffin.png", true, true);
+	myImage->LoadForCanvas();
 }
 
 
@@ -218,4 +226,51 @@ bool CarTracker::insideRocketLeagueWindow(ImVec2 pos)
 		return false;
 	}
 	return true;
+}
+
+void CarTracker::Render(CanvasWrapper canvas)
+{
+	// defines colors in RGBA 0-255
+	LinearColor colors;
+	colors.R = 255;
+	colors.G = 255;
+	colors.B = 0;
+	colors.A = 255;
+	canvas.SetColor(colors);
+
+	// sets position to top left
+	// x moves to the right
+	// y moves down
+	// bottom right would be 1920, 1080 for 1080p monitors
+	canvas.SetPosition(Vector2F{ 0.0, 0.0 });
+
+	// says hi
+	// draws from the last set position
+	// the two floats are text x and y scale
+	// the false turns off the drop shadow
+	canvas.DrawString("Hi Cool Dude", 2.0, 2.0, false);
+	Vector2F p1 = Vector2F(100.0, 200.0);
+	Vector2F p2 = Vector2F(300.0, 300.0);
+	//canvas.DrawRect(p1, p2);
+	//canvas.DrawTile();
+	// ImageWrapper(std::string path, bool canvasLoad = false, bool ImGuiLoad = false);
+	//if (myImage->IsLoadedForCanvas()) {
+	//	//canvas.DrawTexture(myImage.get(), 1);
+	//	// there are multiple functions in the canvaswrapper that accept ImageWrapper*
+
+	//	CVarWrapper cvar_x = cvarManager->getCvar("ct_coord_x");
+	//	if (!cvar_x) { return; }
+	//	float x = cvar_x.getFloatValue();
+
+	//	CVarWrapper cvar_y = cvarManager->getCvar("ct_coord_y");
+	//	if (!cvar_y) { return; }
+	//	float y = cvar_y.getFloatValue();
+
+	//	Rotator rot = Rotator();
+	//	float width = 247;
+	//	float height = 359;
+	//	
+	//	canvas.DrawRotatedTile(myImage.get(), rot, width, height, x, y, width, height, 0, 0);
+	//	
+	//}
 }

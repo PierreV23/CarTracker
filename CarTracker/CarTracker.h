@@ -23,6 +23,8 @@ class CarTracker: public BakkesMod::Plugin::BakkesModPlugin
 	void drawBall();
 	void drawBallToPos(ImVec2 pos);
 	bool insideRocketLeagueWindow(ImVec2 pos);
+	void Render(CanvasWrapper canvas);
+	std::shared_ptr<ImageWrapper> myImage;
 
 public:
 	void RenderSettings() override; // Uncomment if you wanna render your own tab in the settings menu
